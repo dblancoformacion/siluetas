@@ -7,10 +7,15 @@ else $_GET['silueta']=1;
 if($_GET['silueta']>7)
 	$_GET['silueta']=1;
 
-echo '
-	<a href="?silueta='.$_GET['silueta'].'">
-		<img src="figs/f'.$_GET['silueta'].'.jpg">
-	</a>
+$txt = '
+	<div>
+		<a href="?silueta='.$_GET['silueta'].'">
+			<img src="figs/f'.$_GET['silueta'].'.jpg" style="height:300px">
+		</a>
+	</div>		
 ';
+
+echo $txt;
+echo $txt;
 
 ?>
