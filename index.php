@@ -6,6 +6,16 @@ Class Siluetas{
 		if(isset($_GET['estado']))
 			$this->estado=$_GET['estado'];
 	}
+	function atras(){
+		$this->estado--;
+		if($this->estado<1)
+			$this->estado=7;
+	}
+	function adelante(){
+		$this->estado++;
+		if($this->estado>7)
+			$this->estado=1;		
+	}
 	// vista
 	function mostrar(){
 		return '
@@ -22,13 +32,10 @@ Class Siluetas{
 // controlador
 $s=new Siluetas();
 if(isset($_GET['estado']) && !isset($_GET['atras']))
-	$s->estado++;
-if($s->estado>7)
-	$s->estado=1;
+	$s->adelante();
 if(isset($_GET['atras']))
-	$s->estado--;
-if($s->estado<1)
-	$s->estado=7;
+	$s->atras();
+	
 echo $s->mostrar();
 echo $s->mostrar();
 
