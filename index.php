@@ -1,42 +1,55 @@
 <?php
 Class Siluetas{
 	// modelo
-	public $estado=1;
+	public $estado;
+	private $conn;
 	function __construct(){
-		if(isset($_GET['estado']))
-			$this->estado=$_GET['estado'];
+		$this->conn=new mysqli('localhost','root','','db2019');
+		$r=$this->conn->query("
+			SELECT * FROM siluetas;
+		")->fetch_all(MYSQLI_ASSOC);
+		foreach($r as $reg)
+			$this->estado[$reg['id_silueta']]=$reg['estado'];
 	}
 	function atras(){
-		$this->estado--;
-		if($this->estado<1)
-			$this->estado=7;
+		$this->estado[$_GET['atras']]--;
+		if($this->estado[$_GET['atras']]<1)
+			$this->estado[$_GET['atras']]=7;
+		$this->conn->query("
+			UPDATE siluetas SET estado=".$this->estado[$_GET['atras']]."
+				WHERE id_silueta=".$_GET['atras'].";
+		");
 	}
 	function adelante(){
-		$this->estado++;
-		if($this->estado>7)
-			$this->estado=1;		
+		$this->estado[$_GET['adelante']]++;
+		if($this->estado[$_GET['adelante']]>7)
+			$this->estado[$_GET['adelante']]=1;		
+		$this->conn->query("
+			UPDATE siluetas SET estado=".$this->estado[$_GET['adelante']]."
+				WHERE id_silueta=".$_GET['adelante'].";
+		");		
 	}
 	// vista
 	function mostrar(){
-		return '
-			<div>
-				<a href="?atras=1&estado='.$this->estado.'" style="font-size:4em"> < </a>
-				<a href="?estado='.$this->estado.'" style="font-size:4em">
-					<img src="figs/f'.$this->estado.'.jpg" style="height:300px;"> >
-				</a>
-			</div>		
-		';
+		$txt=null;
+		foreach($this->estado as $id=>$estado)
+			$txt.='
+				<div>
+					<a href="?atras='.$id.'" style="font-size:4em"> < </a>
+					<a href="?adelante='.$id.'" style="font-size:4em">
+						<img src="figs/f'.$estado.'.jpg" style="height:300px;"> >
+					</a>
+				</div>		
+			';
+		return $txt;
 	}	
 }
 
 // controlador
 $s=new Siluetas();
-if(isset($_GET['estado']) && !isset($_GET['atras']))
+if(isset($_GET['adelante']))
 	$s->adelante();
 if(isset($_GET['atras']))
 	$s->atras();
-	
 echo $s->mostrar();
-echo $s->mostrar();
-
 ?>
